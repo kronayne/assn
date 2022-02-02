@@ -1,3 +1,5 @@
+#Kerry Ronayne (kpr6aj), Lab Assignment 1, 2/1/22
+
 #1. Write a query to get Product name and quantity/unit.
 SELECT product_name
 , quantity_per_unit as quantity
