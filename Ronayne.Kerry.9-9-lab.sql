@@ -1,5 +1,8 @@
 #Kerry Ronayne (kpr6aj), Lab Assignment 1, 2/1/22
 
+SELECT *
+FROM northwind.inventory_transactions;
+
 #1. Write a query to get Product name and quantity/unit.
 SELECT product_name
 , quantity_per_unit as quantity
@@ -63,11 +66,29 @@ WHERE discontinued = 1)
 AS total_discont;
 
 #10. Write a query to get Product list (name, units on order, units in stock) of stock is less than the quantity on order.
+#Here's what I initially thought, taking the number of units from the order and inventory tables and then evaluating which is larger
 SELECT p.product_name AS name
 , o.quantity AS ordered
 , i.quantity AS stock
-FROM products AS p
-, order_details AS o
-, inventory_transactions AS i
-WHERE o.quantity>i.quantity
+FROM northwind.products AS p
+, northwind.order_details AS o
+, northwind.inventory_transactions AS i
+WHERE o.quantity>i.quantity;
+
+#Solution shown in class, but what does the level have to do with the units?
+SELECT product_name AS name
+, target_level AS ordered
+, reorder_level AS stock
+FROM northwind.products 
+WHERE target_level > reorder_level;
+
+
+
+
+
+
+
+
+
+
  
