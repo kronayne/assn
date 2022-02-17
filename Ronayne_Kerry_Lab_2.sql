@@ -299,7 +299,7 @@ SELECT
 FROM northwind.orders AS o
 INNER JOIN northwind.orders_status AS os
 ON o.status_id = os.id
-INNER JOIN northwind.order_details AS od
+RIGHT OUTER JOIN northwind.order_details AS od
 ON od.order_id = o.id
 INNER JOIN northwind.order_details_status as ods
 ON od.status_id = ods.id;
