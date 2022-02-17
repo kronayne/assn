@@ -58,7 +58,6 @@ CREATE TABLE `dim_employees` (
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `dim_products` (
-  `supplier_ids` longtext,
   `product_key` int NOT NULL AUTO_INCREMENT,
   `product_code` varchar(25) DEFAULT NULL,
   `product_name` varchar(50) DEFAULT NULL,
@@ -94,7 +93,7 @@ CREATE TABLE `dim_shippers` (
 ################################
 
 CREATE TABLE `fact_orders` (
-  `order_details_id` int NOT NULL AUTO_INCREMENT,
+  `order_key` int NOT NULL AUTO_INCREMENT,
   `order_id` int NOT NULL,
   `employee_id` int DEFAULT NULL,
   `customer_id` int DEFAULT NULL,
@@ -118,7 +117,13 @@ CREATE TABLE `fact_orders` (
   `tax_rate` double DEFAULT '0',
   `order_status` varchar(50) NOT NULL,
   `order_details_status` varchar(50) NOT NULL,
-  PRIMARY KEY (`order_details_id`)
+  PRIMARY KEY (`order_key`),
+  KEY `order_id` (`order_id`),
+  KEY `customer_id` (`customer_id`),
+  KEY `employee_id` (`employee_id`),
+  KEY `product_id` (`product_id`),
+  KEY `shipper_id` (`shipper_id`),
+  KEY `ship_zip_postal_code` (`ship_zip_postal_code`)
  )ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8mb4;
 
 ####################################################################
@@ -157,7 +162,6 @@ SELECT `id`,
 FROM northwind.customers;
 SELECT * FROM northwind_dw.dim_customers;
 
-
 INSERT INTO `northwind_dw`.`dim_employees`
 (`employee_key`,
 `company`,
@@ -191,10 +195,8 @@ SELECT
 FROM northwind.employees;
 SELECT * FROM northwind_dw.dim_employees;
 
-
 INSERT INTO `northwind_dw`.`dim_products`
-(`supplier_ids`,
-`product_key`,
+(`product_key`,
 `product_code`,
 `product_name`,
 `standard_cost`,
@@ -206,7 +208,6 @@ INSERT INTO `northwind_dw`.`dim_products`
 `minimum_reorder_quantity`,
 `category`)
 SELECT
-`supplier_ids`,
 `id`,
 `product_code`,
 `product_name`,
@@ -247,8 +248,7 @@ SELECT * FROM northwind_dw.dim_shippers;
 ################################
 
 INSERT INTO `northwind_dw`.`fact_orders`
-(`order_details_id`,
-`order_id`,
+(`order_id`,
 `employee_id`,
 `customer_id`,
 `product_id`,
@@ -272,8 +272,7 @@ INSERT INTO `northwind_dw`.`fact_orders`
 `order_status`,
 `order_details_status`)
 SELECT 
-	od.`id` AS order_detail_id,
-    o.`id` AS order_id,
+    o.`id`,
     o.`employee_id`,
     o.`customer_id`,
 	od.`product_id`,
