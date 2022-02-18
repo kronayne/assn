@@ -94,7 +94,7 @@ CREATE TABLE `dim_shippers` (
 
 CREATE TABLE `fact_orders` (
   `order_key` int NOT NULL AUTO_INCREMENT,
-  `order_id` int NOT NULL,
+  `order_id` int DEFAULT NULL,
   `employee_id` int DEFAULT NULL,
   `customer_id` int DEFAULT NULL,
   `product_id`int DEFAULT NULL,
@@ -271,8 +271,7 @@ INSERT INTO `northwind_dw`.`fact_orders`
 `tax_rate`,
 `order_status`,
 `order_details_status`)
-SELECT 
-    o.`id`,
+SELECT o.`id` AS order_id,
     o.`employee_id`,
     o.`customer_id`,
 	od.`product_id`,
@@ -302,6 +301,7 @@ RIGHT OUTER JOIN northwind.order_details AS od
 ON od.order_id = o.id
 INNER JOIN northwind.order_details_status as ods
 ON od.status_id = ods.id;
+
 SELECT * FROM northwind_dw.fact_orders;
 
 ####################################################################
